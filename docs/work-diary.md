@@ -1,7 +1,6 @@
-## 2026-10-21 — Course workflow reviewed
+## Work Diary
 
-Reviewed the workflow described in the course materials:
-
+## Course workflow
 1. Write a user story describing who needs what and why.
 2. Generate a specification from the user story.
 3. Review the specification with the group and AI; discuss and correct anything unclear or unsuitable.
