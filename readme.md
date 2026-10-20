@@ -1,6 +1,6 @@
 # Groupwork Project for IT and eGov Technologies
 
-**Course:** ITE4120  
+**Course:** ITE4120 Introduction to IT and eGov Technologies  
 **Semester:** Autumn 2026
 
 ## About
