@@ -1,5 +1,7 @@
 ## Work Diary
 
+Progress through the course project workflow. Mark each step complete when done.
+
 ## Course workflow
 1. Write a user story describing who needs what and why.
 2. Generate a specification from the user story.
