@@ -1,5 +1,13 @@
 # Work diary — Helena
 
+## 2026-10-25
+
+**Time spent:** Approximately 1 hour
+
+**Work completed:**
+- Brainstormed on user story topics on team call
+- Created initial draft for user story and specification and distributed workload and defined next steps
+
 ## 2026-10-21
 
 **Time spent:** Approximately 1.5 hours
@@ -15,3 +23,4 @@
 **Corrections and decisions:**
 - Corrected the diary plan after checking the development workflow: each student should keep a separate diary.
 - Clarified that the diary should record actual work, time spent, AI assistance, and corrections.
+
