@@ -1,4 +1,4 @@
-21. october 2026
+**21. october 2026**
     
 Time spent ca 4 hours
 
@@ -14,7 +14,8 @@ Time spent ca 4 hours
 - Learned how to create and commit new files in GitHub.
 
 
-25.october 2026
+
+**25.october 2026**
 
 Time spent ca 1 hour
 
