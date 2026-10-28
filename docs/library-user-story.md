@@ -6,6 +6,7 @@ As a librarian, I want to maintain the book catalogue and lending information so
 
 
 **Context**
+
 The library keeps a register of books identified by a unique ISBN. Each book is registered once and contains information such as title, author, genre, page count, publication year, and status.
 
 Borrower information is not stored as free text. The system stores only the borrower's personal identification code and retrieves borrower details from a separate register whenever needed. One source of truth per fact.
