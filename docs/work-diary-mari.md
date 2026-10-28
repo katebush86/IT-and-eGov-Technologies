@@ -2,7 +2,7 @@
     
 Time spent ca 4 hours
 
-** Work completed:**
+**** Work completed:****
 - Joined the GitHub repository.
 - Reviewed the project requirements.
 - Explored the repository structure.
