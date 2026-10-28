@@ -26,12 +26,12 @@ Borrower information is not stored as free text. The system stores only the borr
 
 7. A book can have one of the following statuses:
 
-  - Available
-  - Borrowed
-  - In Queue
-  - Under Repair
-  - Pre-order
-  - Lost
+ - Available
+ - Borrowed
+ - In Queue
+ - Under Repair
+ - Pre-order
+ - Lost
 8. If the publication year is in the future, the book status must automatically be set to "Pre-order".
 
 9. Books with status "Under Repair", "Pre-order", or "Lost" cannot have an assigned borrower.
