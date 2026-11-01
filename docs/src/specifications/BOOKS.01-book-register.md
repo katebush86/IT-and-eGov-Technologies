@@ -12,19 +12,20 @@ Excluded: authentication and role-based visibility (mock auth only; library user
 
 | Table         | Field                    | Type    | Rules                                                                                                       |
 |---------------|--------------------------|---------|-------------------------------------------------------------------------------------------------------------|
-| `books.book`  | `isbn` PK                | text    | a title; 10 or 13 digits after stripping hyphens and spaces; stored without separators; unique              |
+| `books.book`  | `id` PK                  | bigint  | a title; from `core.seq_id`                                                                                 |
+|               | `isbn`                   | text    | required; 10 or 13 digits after stripping hyphens and spaces; stored without separators; **unique among active rows** |
 |               | `title`                  | text    | required, ≤255                                                                                              |
 |               | `author`                 | text    | required, ≤255                                                                                              |
 |               | `genre`                  | text    | required; one of the genre codes below (check constraint)                                                   |
 |               | `page_count`             | integer | required; **must be greater than 0**                                                                        |
 |               | `publication_year`       | integer | required; 4 digits; **may be in the future** — see the Pre-order rule                                       |
-|               | `sys_*`                  | —       | platform columns, trigger-managed                                                                           |
+|               | `sys_*`                  | —       | platform columns, trigger-managed; `sys_status` marks retired rows (soft delete)                            |
 | `books.copy`  | `id` PK                  | bigint  | from `core.seq_id`                                                                                          |
-|               | `isbn`                   | text    | required; FK → `books.book`, **ON DELETE CASCADE**                                                          |
+|               | `book_id`                | bigint  | required; FK → `books.book`                                                                                 |
 |               | `status`                 | text    | required; one of the six status codes below (check constraint)                                              |
 |               | `borrower_personal_code` | text    | exactly 11 digits — a string, never a number; see the status rules below                                    |
 |               | `due_date`               | date    | required for BORROWED, empty otherwise; defaults to the lending date + **14 days**                          |
-|               | `sys_*`                  | —       | platform columns, trigger-managed                                                                           |
+|               | `sys_*`                  | —       | platform columns, trigger-managed; `sys_status` marks retired rows (soft delete)                            |
 
 The borrower's name is not a column: it comes from the registry adapter (see API). There is no foreign key to the borrower register, because it is a separate system; the personal code is validated for format only.
 
@@ -56,7 +57,7 @@ A copy with no borrower must also have no due date. A copy has one status and at
 ### Design decisions
 
 - **Title and copy are separate tables** because one title can have several physical copies with independent status; otherwise title, author and genre would be repeated for every copy and could contradict each other.
-- **ISBN is the primary key of `book`** because it is a stable, unique identifier of a title. A copy has no natural identifier and gets a surrogate `id`.
+- **Every table has a surrogate `id`** (platform convention). The ISBN is the business identifier of a title, unique among active titles. Removing a title is a soft delete (platform convention), so after removal its ISBN can be registered again.
 - **The personal code is a string** because it is an identifier, not a quantity; a number type would lose leading zeros.
 - **Only the personal code is stored** because it is the minimum needed to link a copy to a person; the name and details live in the borrower register (one source of truth per fact). The code is cleared when the copy stops being borrowed or queued, so no personal data is kept after the lending ends.
 - **Genre and status are fixed lists** enforced by check constraints, which keeps the model at two tables. The cost is that adding a genre needs a migration and a screen change; a genre table with its own endpoint is the natural next round.
@@ -70,7 +71,7 @@ A copy with no borrower must also have no due date. A copy has one status and at
 | `GET /api/books`           | the catalogue, **one row per copy**: `textContains` (matches ISBN, title **or** author), `genre`, `status`; each row carries the title data, the copy's status, due date, `overdueDays` and `borrowerName` | 400 unknown genre or status |
 | `POST /api/books`          | register a title and create `copyCount` copies (default 1, at least 1); answers **201 + Location**                                                                   | 400 validation · 409 duplicate ISBN  |
 | `PUT /api/copies/{id}`     | set the copy's lending data: `status`, `borrowerPersonalCode`, `dueDate` (the three fields are replaced as a whole)                                                  | 400 · 404                            |
-| `DELETE /api/books/{isbn}` | remove the title and all its copies — **204**                                                                                                                        | 404 · 409 a copy is BORROWED         |
+| `DELETE /api/books/{id}` | remove (retire) the title and all its copies, a soft delete — **204**                                                                                                                        | 404 · 409 a copy is BORROWED         |
 
 `POST /api/books` takes `isbn`, `title`, `author`, `genre`, `pageCount`, `publicationYear` and optionally `copyCount`. All its copies start as `AVAILABLE` (or `PRE_ORDER`, see the Pre-order rule); lending data is set per copy afterwards with `PUT /api/copies/{id}`. In a `PUT`, a BORROWED copy with no `dueDate` gets today + 14 days.
 
@@ -111,10 +112,10 @@ Every error is `application/problem+json`; a caller's mistake never answers 500.
 3. **Overdue days are shown once the due date has passed.** Given a `BORROWED` copy with a due date 3 days ago, when the catalogue is read, then its `overdueDays` is 3. And given a due date of today or later, then `overdueDays` is 0 and the UI shows no overdue tag.
 4. **Copies that are not out have no borrower.** Given a copy, when it is set to `UNDER_REPAIR`, `PRE_ORDER` or `LOST` together with a borrower personal code, then the change is refused with "borrower not allowed for this status". And when a `BORROWED` copy is set to `UNDER_REPAIR` without a borrower, then its borrower and due date become empty.
 5. **A borrowed copy has a borrower and a due date.** Given a request to set status `BORROWED` without a borrower personal code, when it is submitted, then it is refused (400). And given a `BORROWED` request with a borrower but no due date, then the due date is set to today + 14 days.
-6. **An ISBN identifies exactly one title.** Given a registered title with ISBN X, when a second title claims X (with or without hyphens), then the registration conflicts (409).
+6. **An ISBN identifies exactly one title.** Given a registered title with ISBN X, when a second title claims X (with or without hyphens), then the registration conflicts (409). And when the first title has been removed, then X may be registered again.
 7. **A malformed personal code is rejected.** Given a lending request whose personal code has 10 digits or contains letters, when it is submitted, then it is refused (400) with a message naming the personal code.
 8. **The genre must be on the list.** Given a registration with a genre that is not one of the genre codes, when it is submitted, then it is refused (400).
 9. **Copies are independent.** Given a title with 2 copies, when one is set to `BORROWED`, then the catalogue shows one `BORROWED` row and one `AVAILABLE` row for that ISBN.
-10. **A title with a borrowed copy cannot be removed.** Given a title with a `BORROWED` copy, when it is removed, then the removal conflicts (409). And given a title whose copies are not borrowed, when it is removed, then 204 is returned and the title and its copies are gone.
+10. **A title with a borrowed copy cannot be removed.** Given a title with a `BORROWED` copy, when it is removed, then the removal conflicts (409). And given a title whose copies are not borrowed, when it is removed, then 204 is returned and the title and its copies no longer appear in the catalogue.
 11. **The catalogue can be searched and filtered.** Given several titles, when searching by part of an ISBN, a title or an author, then only the matching rows are returned. And when filtering by genre and status, then only rows with both are returned.
 12. **The borrower register being down does not break the catalogue.** Given the borrower register is unreachable, when the catalogue is read, then it answers 200 and `borrowerName` is `null` for borrowed copies.
