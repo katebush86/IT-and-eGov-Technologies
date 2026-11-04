@@ -13,18 +13,21 @@ Borrower information is not stored as free text. The system stores only the borr
 
 
 **Acceptance Criteria**
-1. A book can be registered with an ISBN, title, author, genre, page count, publication year, status, optional borrower, and lending due date.
-2. An ISBN identifies exactly one active book.
+1. A book can be registered with an ISBN, title, author, genre, page count, publication year, and status.
 
-3. Obvious invalid data is rejected with a clear message: duplicate ISBN, page count equal to or less than zero, publication year in the future without a "Pre-order" status, or malformed personal identification code.
+2. When a book is borrowed, the lending information includes the book ISBN, the borrower's personal identification code, and the lending due date.
 
-4. The catalogue is searchable by title, author, or ISBN and filterable by genre and status.
+3. An ISBN identifies exactly one active book.
 
-5. Library users can view a book's current status and availability.
+4. Obvious invalid data is rejected with a clear message: duplicate ISBN, page count equal to or less than zero, publication year in the future without a "Pre-order" status, or malformed personal identification code.
 
-6. For a borrowed book, the librarian sees the borrower's information fetched live from the borrower register and never stored locally.
+5. The catalogue is searchable by title, author, or ISBN and filterable by genre and status.
 
-7. A book can have one of the following statuses:
+6. Library users can view a book's current status and availability.
+
+7. For a borrowed book, the librarian sees the borrower's information fetched live from the borrower register and never stored locally.
+
+8. A book can have one of the following statuses:
 
  - Available
  - Borrowed
@@ -32,10 +35,10 @@ Borrower information is not stored as free text. The system stores only the borr
  - Under Repair
  - Pre-order
  - Lost
-8. If the publication year is in the future, the book status must automatically be set to "Pre-order".
+9. If the publication year is in the future, the book status must automatically be set to "Pre-order".
 
-9. Books with status "Under Repair", "Pre-order", or "Lost" cannot have an assigned borrower.
+10. Books with status "Under Repair", "Pre-order", or "Lost" cannot have an assigned borrower.
 
-10. The default lending period is 14 days.
+11. The default lending period is 14 days.
 
-11. If the current date exceeds the lending due date, the system displays the number of overdue days.
+12. If the current date exceeds the lending due date, the system displays the number of overdue days.
