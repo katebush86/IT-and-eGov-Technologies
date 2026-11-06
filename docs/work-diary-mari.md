@@ -42,6 +42,8 @@ Time spent ca 1,5 hours
 **AI assistance:**
  - used Copilot to review the user-story draft. Based on it's suggestion, the "Lost" status was added to the list of book statuses.
 
+   
+
 
 **4. november 2026**
 
