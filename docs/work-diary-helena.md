@@ -1,5 +1,33 @@
 # Work diary — Helena
 
+## 2026-11-dd
+
+**Time spent:** 
+
+**Work completed:**
+- 
+
+**AI assistance:**
+- 
+
+**Corrections and decisions:**
+- 
+
+## 2026-11-01
+
+**Time spent:** Approximately 2 hours
+
+**Work completed:**
+- Added spec file
+- Created a branch to commit to github repo
+
+**AI assistance:**
+- Asked AI to create a spec file based on brainstorming notes
+- Asked AI help on how to protect main branch
+
+**Corrections and decisions:**
+- User Story moved to user story folder and needs some updates too after spec file
+
 ## 2026-10-25
 
 **Time spent:** Approximately 1 hour
