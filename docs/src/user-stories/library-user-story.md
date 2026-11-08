@@ -18,9 +18,9 @@ Borrower information is not stored as free text. The system stores only the borr
 
 1. A book title can be registered with an ISBN, title, author, genre, page count, publication year, and one or more copies.
 
-2. An ISBN identifies exactly one active book title, while each copy is managed separately.
+2. An ISBN identifies exactly one book title, while individual copies are managed separately.
 
-3. Obvious invalid data is rejected with a clear message: duplicate ISBN, page count equal to or less than zero, publication year in the future without a "Pre-order" status for its copies, or malformed personal identification code.
+3. Invalid data is rejected with a clear message: duplicate ISBN, page count equal to or less than zero, or malformed personal identification code.
 
 4. The catalogue is searchable by title, author, or ISBN and filterable by genre and copy status.
 
@@ -49,4 +49,4 @@ Borrower information is not stored as free text. The system stores only the borr
 
 13. Copies of the same book title are handled independently. For example, if a title has two copies, one copy may be "Borrowed" while the other is "Available".
 
-14. A book title cannot be removed while any of its copies is "Borrowed" or "In Queue".
+14. A book title cannot be removed while any of its copies are marked "Borrowed" or "In Queue".
