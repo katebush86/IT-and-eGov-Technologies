@@ -1,8 +1,6 @@
 **User Story**
 
-As a library user, I want to search books by ISBN, title, or author and view their availability and lending status so that I can easily find books and know whether they can be borrowed.
-
-As a librarian, I want to maintain the book catalogue, book copies, and lending information so that library records remain accurate and up to date.
+As a librarian, I want to manage the book catalogue, book copies, and lending information, search books by ISBN, title, or author, and monitor their availability and lending status so that library records remain accurate and up to date.
 
 
 **Context**
